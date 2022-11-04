@@ -1,0 +1,35 @@
+{
+    "items": [
+        {
+            "id": "636599e59da70",
+            "title": "Lorem ipsum dolor sit amet",
+            "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur suscipit erat vitae massa.",
+            "url": "https:\/\/www.google.com",
+            "tags": [
+                "tag1",
+                "tag2",
+                "tag3"
+            ]
+        },
+        {
+            "id": "63659a0e0b712",
+            "title": "Phasellus ut est. Nullam eu urna.",
+            "description": "Nulla facilisi. Praesent sollicitudin, mauris ut fermentum suscipit, eros ante adipiscing risus, a facilisis orci quam in magna.",
+            "url": "https:\/\/www.twitter.com",
+            "tags": [
+                "this is a multy-word tag",
+                "tag4"
+            ]
+        },
+        {
+            "id": "63659a455a36f",
+            "title": "Aenean sit amet augue. Proin non orci.",
+            "description": "Ut adipiscing eros ut tortor. Fusce convallis, nisi a euismod dignissim, sem augue adipiscing ante, accumsan vehicula neque nisl id felis.",
+            "url": "https:\/\/www.github.com",
+            "tags": [
+                "tag5",
+                "tag6"
+            ]
+        }
+    ]
+}
