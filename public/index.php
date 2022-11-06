@@ -321,10 +321,10 @@ switch ($pageAction) {
     </style>
 </head>
 
-<body>
+<body class="container">
 
     <main class="row">
-        <div class="wrap offset-sm-1 col-sm-10">
+        <div class="wrap offset-sm-1 col-sm-10 mt-3">
 
             <?php echo getPageMessages(); ?>
 
