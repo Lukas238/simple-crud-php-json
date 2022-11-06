@@ -248,7 +248,7 @@ switch ($pageAction) {
     case ACTION__EDIT:
         if (!itemEdit()) {
             addPageMessage("Can't edit " . ENTRY_LABEL_SINGULAR . ". The 'id' is missing.", "danger");
-            header("Location: ADMIN_PAGE_URL");
+            header("Location: " . ADMIN_PAGE_URL);
             die();
         }
         break;
@@ -259,7 +259,7 @@ switch ($pageAction) {
         } else {
             addPageMessage(ucfirst(ENTRY_LABEL_SINGULAR) . " <strong>'$res->title'</strong> updated.", "success");
         }
-        header("Location: ADMIN_PAGE_URL");
+        header("Location: ". ADMIN_PAGE_URL);
         die();
         break;
     case ACTION__DELETE:
@@ -269,7 +269,7 @@ switch ($pageAction) {
         } else {
             addPageMessage(ucfirst(ENTRY_LABEL_SINGULAR) . " <strong>'$res->title'</strong> deleted.", "success");
         }
-        header("Location: ADMIN_PAGE_URL");
+        header("Location: ". ADMIN_PAGE_URL);
         die();
         break;
     default:
