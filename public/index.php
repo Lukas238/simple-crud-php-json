@@ -27,9 +27,9 @@ define("ACTION__DELETE", 4);
  * *********************
  */
 
- /**
-  * Adds PHP BasicAuth security check
-  */
+/**
+ * Adds PHP BasicAuth security check
+ */
 function addBasicAuthSecurity()
 {
 
