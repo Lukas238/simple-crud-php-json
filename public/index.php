@@ -290,6 +290,27 @@ switch ($pageAction) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
     <style>
+        #search-box {
+            position: relative;
+        }
+
+        #search-box button {
+            display: none;
+            font-size: .6em;
+            position: absolute;
+            right: 1em;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #search-box input:valid {
+            padding-right: 2em;
+        }
+
+        #search-box input:valid+button {
+            display: block;
+        }
+
         #entriesTable.filtered>tbody>tr:not(.filtered-in) {
             display: none;
         }
@@ -321,7 +342,13 @@ switch ($pageAction) {
                         <a href="<?php echo ADMIN_PAGE_URL; ?>?<?php echo http_build_query(["action" => ACTION__CREATE]); ?>" class="btn btn-primary btn-sm mt-1">Add new <?php echo ENTRY_LABEL_SINGULAR; ?> <i class="bi-plus-lg "></i></a>
                     </div>
                     <div class="col-sm-6 col-lg-3 mt-2 mt-sm-0">
-                        <label class="form-label col-form-label-sm">Filter by Tags</label><input class="form-control" type="search" id="filter-tags" placeholder="Filter by tags. Ex.: tag1, tag2">
+                        <form>
+                            <label class="form-label visually-hidden ">Filter by Tags</label>
+                            <div id="search-box">
+                                <input class="form-control" type="text" id="filter-tags" placeholder="Filter by tags" required>
+                                <button type="reset" class="btn-close" aria-label="Clear"></button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -366,64 +393,7 @@ switch ($pageAction) {
                     </table>
                 </div>
 
-                <script>
-                    (() => {
 
-                        const table = document.querySelector('#entriesTable');
-
-                        const filter_tags_input = document.querySelector('input#filter-tags');
-
-
-                        const filterByTags = function() {
-                            var filter_values = filter_tags_input.value.split(',');
-                            filter_values = filter_values.map(v => v.trim());
-                            filter_values = filter_values.filter(v => v);
-
-                            // Clean prevous filtered-in states
-                            const tr_list = document.querySelectorAll('tr.filtered-in');
-                            for (const tr of tr_list) {
-                                tr.classList.remove('filtered-in');
-                            }
-
-                            if (filter_values.length) {
-                                table.classList.add('filtered');
-
-                                for (const filter_value of filter_values) {
-                                    const tr_list = document.querySelectorAll('tr[data-tags*="' + filter_value + '"]');
-                                    for (const tr of tr_list) {
-                                        tr.classList.add('filtered-in');;
-                                    }
-                                }
-                            } else {
-                                table.classList.remove('filtered');
-                            }
-                        }
-                        filter_tags_input.addEventListener('keyup', event => {
-                            filterByTags();
-                        });
-
-                        const tag_bages = document.querySelectorAll('td.tags span.badge');
-                        for (const tag_badge of tag_bages) {
-
-                            tag_badge.addEventListener('click', event => {
-                                const el = event.target;
-                                const badge_val = el.textContent;
-
-                                var filter_values = filter_tags_input.value.split(',');
-                                filter_values = filter_values.map(v => v.trim());
-                                filter_values = filter_values.filter(v => v);
-
-                                filter_values.push(badge_val);
-                                filter_values = [...new Set(filter_values)]; // Remove duplicated from the set
-
-                                filter_tags_input.value = filter_values.join(', ');
-
-                                filterByTags(); //Update filters
-                            });
-                        }
-
-                    })()
-                </script>
 
             <?php
             } elseif (in_array($pageAction, [ACTION__EDIT, ACTION__CREATE])) {
@@ -529,17 +499,86 @@ switch ($pageAction) {
 
     <script>
         (() => {
-            const confirmButtons = [...document.querySelectorAll('button[data-confirm], a[data-confirm]')];
-            for (const confirmButton of confirmButtons) {
-                confirmButton.addEventListener('click', event => {
 
-                    const message = event.currentTarget.dataset.confirm;
-                    if (!confirm(message)) {
-                        event.preventDefault();
-                    };
+            const initFiltersTag = function() {
 
+                const table = document.querySelector('#entriesTable');
+
+                const filter_tags_input = document.querySelector('input#filter-tags');
+
+
+                const filterByTags = function() {
+                    var filter_values = filter_tags_input.value.split(',');
+                    filter_values = filter_values.map(v => v.trim());
+                    filter_values = filter_values.filter(v => v);
+
+                    // Clean prevous filtered-in states
+                    const tr_list = document.querySelectorAll('tr.filtered-in');
+                    for (const tr of tr_list) {
+                        tr.classList.remove('filtered-in');
+                    }
+
+                    if (filter_values.length) {
+                        table.classList.add('filtered');
+
+                        for (const filter_value of filter_values) {
+                            const tr_list = document.querySelectorAll('tr[data-tags*="' + filter_value + '"]');
+                            for (const tr of tr_list) {
+                                tr.classList.add('filtered-in');;
+                            }
+                        }
+                    } else {
+                        table.classList.remove('filtered');
+                    }
+                }
+                filter_tags_input.addEventListener('keyup', event => {
+                    filterByTags();
                 });
+
+                document.querySelector('#search-box button').addEventListener('click', event => {
+                    setTimeout(filterByTags, 100)
+                });
+
+                const tag_bages = document.querySelectorAll('td.tags span.badge');
+                for (const tag_badge of tag_bages) {
+
+                    tag_badge.addEventListener('click', event => {
+                        const el = event.target;
+                        const badge_val = el.textContent;
+
+                        var filter_values = filter_tags_input.value.split(',');
+                        filter_values = filter_values.map(v => v.trim());
+                        filter_values = filter_values.filter(v => v);
+
+                        filter_values.push(badge_val);
+                        filter_values = [...new Set(filter_values)]; // Remove duplicated from the set
+
+                        filter_tags_input.value = filter_values.join(', ');
+
+                        filterByTags(); //Update filters
+                    });
+                }
             }
+
+            const initEditForm = function() {
+
+                const confirmButtons = [...document.querySelectorAll('button[data-confirm], a[data-confirm]')];
+                for (const confirmButton of confirmButtons) {
+                    confirmButton.addEventListener('click', event => {
+
+                        const message = event.currentTarget.dataset.confirm;
+                        if (!confirm(message)) {
+                            event.preventDefault();
+                        };
+
+                    });
+                }
+
+            }
+
+
+            initFiltersTag();
+            initEditForm();
         })()
     </script>
 
