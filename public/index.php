@@ -9,6 +9,8 @@ define("CREDENTIALS", [
     'admin' => '12345678'
 ]);
 
+define('ENCRYPT_KEY', 'v[fjV0FhY<d9KZ;hraEUzWVwtdZvE-');
+
 define("ENTRY_LABEL_SINGULAR", "item");
 define("ENTRY_LABEL_PLURAL", "items");
 
@@ -49,6 +51,19 @@ function addBasicAuthSecurity()
 }
 
 
+function encryptData($data = null)
+{
+    $encryptedString = base64_encode(openssl_encrypt($data, 'AES-256-CBC-HMAC-SHA256', ENCRYPT_KEY, OPENSSL_RAW_DATA, "04BCCB509EC9E6F5"));
+    return $encryptedString;
+}
+
+
+function decryptData($data = null)
+{
+    $decrypted = openssl_decrypt(base64_decode($data), 'AES-256-CBC-HMAC-SHA256', ENCRYPT_KEY, OPENSSL_RAW_DATA, "04BCCB509EC9E6F5");
+    return $decrypted;
+}
+
 /**
  * Add unique ID to entries if missing
  */
@@ -72,8 +87,8 @@ function normalizeData($data = null)
 function readJSON()
 {
     $data = file_get_contents(DB_FILE);
+    $data = decryptData($data);
     $data = json_decode($data);
-
     $data = normalizeData($data);
 
     return $data;
@@ -86,8 +101,11 @@ function readJSON()
  */
 function writeJSON($data)
 {
+
     $data = json_encode($data, JSON_PRETTY_PRINT);
+    $data = encryptData($data);
     file_put_contents(DB_FILE, $data);
+
     return true;
 }
 
