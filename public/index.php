@@ -520,9 +520,12 @@ switch ($pageAction) {
 
             const initFiltersTag = function() {
 
+                const filter_tags_input = document.querySelector('input#filter-tags');
                 const table = document.querySelector('#entriesTable');
 
-                const filter_tags_input = document.querySelector('input#filter-tags');
+                if(!filter_tags_input){
+                    return;
+                }
 
 
                 const filterByTags = function() {
@@ -549,13 +552,16 @@ switch ($pageAction) {
                         table.classList.remove('filtered');
                     }
                 }
-                filter_tags_input.addEventListener('keyup', event => {
-                    filterByTags();
-                });
 
-                document.querySelector('#search-box button').addEventListener('click', event => {
-                    setTimeout(filterByTags, 100)
-                });
+
+                    filter_tags_input.addEventListener('keyup', event => {
+                        filterByTags();
+                    });
+
+                    document.querySelector('#search-box button').addEventListener('click', event => {
+                        setTimeout(filterByTags, 100)
+                    });
+
 
                 const tag_bages = document.querySelectorAll('td.tags span.badge');
                 for (const tag_badge of tag_bages) {
